@@ -1,0 +1,23 @@
+import sys
+import bisect
+
+def minimize_loss(prices):
+    min_loss = sys.maxsize
+    seen_prices_sorted = []
+
+    for current_sell_price in prices:
+        insertion_point = bisect.bisect_right(seen_prices_sorted, current_sell_price)
+        
+        if insertion_point < len(seen_prices_sorted):
+            potential_buy_price = seen_prices_sorted[insertion_point]
+            loss = potential_buy_price - current_sell_price
+            min_loss = min(min_loss, loss)
+
+        bisect.insort_left(seen_prices_sorted, current_sell_price)
+        
+    return min_loss
+
+price_chart = [20, 15, 7, 2, 13]
+loss = minimize_loss(price_chart)
+print(f"Prices: {price_chart}")
+print(f"Minimum Loss: {loss}")
